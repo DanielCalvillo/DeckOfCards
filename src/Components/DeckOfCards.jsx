@@ -6,31 +6,51 @@ class DeckOfCards extends Component {
         super(props)
         this.state = {
             deck: null,
-            givenDeck: null
+            givenDeck: []
         }
         this.deliverNewCard = this.deliverNewCard.bind(this)
     }
 
     async deliverNewCard() {
         const deck_id = this.state.deck.deck_id
-        const cardUrl = `https://deckofcardsapi.com/api/deck/${deck_id}/draw/`
-
-        let newCard = await axios.get(cardUrl)
+        // const cardUrl = `https://deckofcardsapi.com/api/deck/${deck_id}/draw/`
+        // let newCard = await axios.get(cardUrl)
         
-        if(this.state.givenDeck) {
-            console.log(newCard.data.cards[0])
-            await this.setState({
-                deck: newCard.data,
-                givenDeck: [...this.state.givenDeck, newCard.data.cards[0]],
-            })
-        } else {
-            await this.setState({
-                deck: newCard.data,
-            })
+        // if(this.state.givenDeck) {
+        //     console.log(newCard.data.cards[0])
+        //     await this.setState({
+        //         deck: newCard.data,
+        //         givenDeck: [...this.state.givenDeck, newCard.data.cards[0]],
+        //     })
+        // } else {
+        //     await this.setState({
+        //         deck: newCard.data,
+        //     })
     
-            this.setState({
-                givenDeck: this.state.deck.cards
-            })
+        //     this.setState({
+        //         givenDeck: this.state.deck.cards
+        //     })
+        // }
+        try {
+            const cardUrl = `https://deckofcardsapi.com/api/deck/${deck_id}/draw/`
+            let newCard = await axios.get(cardUrl)
+            if(!newCard.data.success) {
+                throw new Error("No cards remaining!")
+            }
+            let card = newCard.data.cards[0];
+            // Set the state with a callback function to avoid errors
+            this.setState(st => ({
+                givenDeck: [
+                    ...st.givenDeck,
+                    {
+                        id: card.code,
+                        image: card.image,
+                        name: `${card.value} of ${card.suit}`
+                    }
+                ]
+            }));
+        } catch (err) {
+            alert(err)
         }
     }
 
@@ -44,25 +64,25 @@ class DeckOfCards extends Component {
 
     render() {
 
-        if(this.state.givenDeck) {
-            var counter = this.state.givenDeck.length
-            var cardUrl = this.state.givenDeck[counter-1].images.svg
-            console.log(counter)
-            var stillADeck = this.state.deck.remaining
-            console.log(stillADeck)
-        }
+        // if(this.state.givenDeck) {
+        //     var counter = this.state.givenDeck.length
+        //     var cardUrl = this.state.givenDeck[counter-1].images.svg
+        //     console.log(counter)
+        //     var stillADeck = this.state.deck.remaining
+        //     console.log(stillADeck)
+        // }
 
         return (
             <div>
-                
+
                 <button onClick={this.deliverNewCard}>
                     GIVE ME A CARD!
                 </button>
-                {this.state.givenDeck && stillADeck > 0 ? 
+                {/* {this.state.givenDeck && stillADeck > 0 ? 
                     <img src={cardUrl}/>
                     :
                     <h1>NO HAY CARTAS</h1>
-                }
+                } */}
 
             </div>
         )
