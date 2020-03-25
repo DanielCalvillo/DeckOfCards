@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import '../Assets/DeckOfCards.css'
 import Card from './Card';
 import axios from 'axios';
 
@@ -83,8 +84,7 @@ class DeckOfCards extends Component {
                 <button onClick={this.deliverNewCard}>
                     GIVE ME A CARD!
                 </button>
-                {cards}
-
+                <div className="Deck-cardarea">{cards}</div>
             </div>
         )
     }
