@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Card from './Card';
 import axios from 'axios';
 
 class DeckOfCards extends Component {
@@ -72,17 +73,17 @@ class DeckOfCards extends Component {
         //     console.log(stillADeck)
         // }
 
+        let cards = this.state.givenDeck.map( c => (
+            <Card name={c.name} image={c.image} />
+        ))
+
         return (
             <div>
 
                 <button onClick={this.deliverNewCard}>
                     GIVE ME A CARD!
                 </button>
-                {/* {this.state.givenDeck && stillADeck > 0 ? 
-                    <img src={cardUrl}/>
-                    :
-                    <h1>NO HAY CARTAS</h1>
-                } */}
+                {cards}
 
             </div>
         )
